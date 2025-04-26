@@ -19,4 +19,4 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Tests
-        run: pytest github_action_example/tests/test_github_aciton.py
+        run: pytest github_action_example/tests/test_github_action.py
