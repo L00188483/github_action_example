@@ -1,7 +1,9 @@
 name: Branch Naming Check - Dev
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - '*'
 
 jobs:
   branch-name-validation-dev:
