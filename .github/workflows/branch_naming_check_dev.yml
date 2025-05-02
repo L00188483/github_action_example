@@ -1,10 +1,10 @@
 name: Branch Naming Check - Dev
 
 on:
-  push:
+  pull_request:
     branches:
       - '*'
-
+      
 jobs:
   branch-name-validation-dev:
     runs-on: ubuntu-latest
