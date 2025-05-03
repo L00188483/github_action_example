@@ -12,7 +12,7 @@ jobs:
       - name: check-branch-names
         run: |
           branch_name=${GITHUB_HEAD_REF}
-          if ["$branch_name" == "dev" ]; then
+          if [ "$branch_name" == "dev" ]; then
             echo "Branch naming OK"
           else
             echo "Branch naming does not comply with policy - please only merge to main from the dev branch"
