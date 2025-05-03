@@ -2,6 +2,8 @@ name: Branch Naming Check - Main
 
 on:
   pull_request:
+    branches:
+      - main
 
 jobs:
   branch-name-validation-main:

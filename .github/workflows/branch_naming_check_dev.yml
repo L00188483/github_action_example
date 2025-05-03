@@ -2,7 +2,9 @@ name: Branch Naming Check - Dev
 
 on:
   pull_request:
-      
+    branches:
+      - dev
+
 jobs:
   branch-name-validation-dev:
     runs-on: ubuntu-latest
