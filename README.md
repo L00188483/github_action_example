@@ -1,16 +1,49 @@
 
-#### initial setup for local developement
+#### Initial setup for local development
 
 ```bash
 
 $ python3 -m venv venv/
 $ source venv/bin/activate
-$ pip3 install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
-#### running your tests
+
+#### Running the simple tests
 ```bash
 
 $ source venv/bin/activate
 $ pytest github_action_example/tests/test_github_action.py
+```
+
+
+#### Running the movies tests
+```bash
+
+$ source venv/bin/activate
+$ pytest movies_app/tests/test_movies.py
+```
+
+#### Running ALL tests
+```bash
+
+$ source venv/bin/activate
+$ pytest 
+```
+
+
+
+#### Running workflows in Github Actions
+* todo: fill this out
+
+
+#### Optional: you launch the DaynamoDB container manually
+```bash
+$ docker run -p -d --rm 8000:8000 --name=dynamodb amazon/dynamodb-local -jar DynamoDBLocal.jar
+```
+
+
+#### Run the flask webserver
+```bash
+$ python movies_app/app.py
 ```
