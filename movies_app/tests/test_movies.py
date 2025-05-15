@@ -45,8 +45,11 @@ def dynamodb_container():
 @pytest.fixture
 def dynamodb_connection(dynamodb_container):
     yield boto3.resource(
-        'dynamodb', endpoint_url="http://localhost:8000",
-        region_name='eu-west-1'
+        'dynamodb',
+        endpoint_url="http://localhost:8000",
+        region_name='eu-west-1',
+        aws_access_key_id="fakeMyKeyId",
+        aws_secret_access_key="fakeSecretAccessKey"
     )
 
 
