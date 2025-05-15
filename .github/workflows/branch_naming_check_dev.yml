@@ -2,7 +2,9 @@ name: Branch Naming Check - Dev
 
 on:
   pull_request:
-      
+    branches:
+      - dev
+
 jobs:
   branch-name-validation-dev:
     runs-on: ubuntu-latest
@@ -10,7 +12,7 @@ jobs:
       - name: check-branch-names
         run: |
           branch_name=${GITHUB_HEAD_REF}
-          if [[ "$branch_name" == feature-* || "$branch_name" == Feature-* || "$branch_name" == docs ]]; then
+          if [[ "$branch_name" == feature-* ]]; then
             echo "Branch naming OK"
           else
             echo "Branch naming does not comply with policy - please prefix feature branch names with 'feature-' or 'docs'"
