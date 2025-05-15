@@ -1,4 +1,5 @@
-from datetime import datetime
+import datetime
+
 import time
 
 import boto3
@@ -25,7 +26,8 @@ def dynamodb_container():
     # python client for interacting with docker:
     client = docker.from_env()
 
-    container_name = f"dynamodb-test-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    dt_now = datetime.datetime.now(datetime.UTC)
+    container_name = f"dynamodb-test-{dt_now.strftime('%Y%m%d%H%M%S')}"
 
     # run a container:
     container = client.containers.run(
