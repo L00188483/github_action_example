@@ -18,5 +18,8 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Run the movies tests
-        run: pytest movies_app/tests/test_movies.py
+      - name: Run a single test
+        run: pytest github_action_example/tests/test_github_action.py -k test_gh_action2
+
+      - name: Run every test in this .py file
+        run: pytest github_action_example/tests/test_github_action.py

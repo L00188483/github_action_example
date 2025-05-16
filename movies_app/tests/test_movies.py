@@ -13,6 +13,7 @@ from movies_app.get_movie import get_movie
 from movies_app.delete_movie import delete_movie
 
 
+# setup variables for the tests below (test_insert_and_get_movie, test_delete_movie)
 MOVIE_TITLE = "A Test Movie"
 MOVIE_YEAR = 2015
 MOVIE_PLOT = "This is a plot."
