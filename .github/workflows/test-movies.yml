@@ -20,3 +20,4 @@ jobs:
 
       - name: Run the movies tests
         run: pytest movies_app/tests/test_movies.py
+

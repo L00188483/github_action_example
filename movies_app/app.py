@@ -1,10 +1,10 @@
 import boto3
 from flask import Flask, request, jsonify
 
-from get_movie import get_movie
-from insert_movie import insert_movie
-from delete_movie import delete_movie
-from MoviesCreateTable import create_movie_table
+from movies_app.service_layer.get_movie import get_movie
+from movies_app.service_layer.insert_movie import insert_movie
+from movies_app.service_layer.delete_movie import delete_movie
+from movies_app.service_layer.MoviesCreateTable import create_movie_table
 
 
 dynamodb = boto3.client('dynamodb', endpoint_url="http://localhost:8000")

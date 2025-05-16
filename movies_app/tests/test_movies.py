@@ -7,10 +7,10 @@ import docker
 from pprint import pprint
 import pytest
 
-from movies_app.MoviesCreateTable import create_movie_table
-from movies_app.insert_movie import insert_movie
-from movies_app.get_movie import get_movie
-from movies_app.delete_movie import delete_movie
+from movies_app.service_layer.MoviesCreateTable import create_movie_table
+from movies_app.service_layer.insert_movie import insert_movie
+from movies_app.service_layer.get_movie import get_movie
+from movies_app.service_layer.delete_movie import delete_movie
 
 
 # setup variables for the tests below (test_insert_and_get_movie, test_delete_movie)
@@ -19,8 +19,7 @@ MOVIE_YEAR = 2015
 MOVIE_PLOT = "This is a plot."
 
 
-@pytest.fixture
-def dynamodb_container():
+def create_dynamodb_container():
     """
     Python equivalent to launching a docker container i.e. equivalent to:
       $ docker run -d --rm -p 8000:8000 --name=dynamodb amazon/dynamodb-local -jar DynamoDBLocal.jar
@@ -29,12 +28,20 @@ def dynamodb_container():
     # python client for interacting with docker:
     client = docker.from_env()
 
-    # generate a unique container name
-    dt_now = datetime.datetime.now(datetime.UTC)
-    container_name = f"dynamodb-test-{dt_now.strftime('%Y%m%d%H%M%S')}"
+    container_name = "dynamodb-test"
+
+    # delete container if it already exists
+    try:
+        existing_container = client.containers.get(container_name)
+        print(f"Container '{container_name}' already exists. Removing it...")
+        existing_container.stop()  # stop() also removes it when remove=True
+        time.sleep(3)
+
+    except docker.errors.NotFound:
+        pass
 
     # run a container:
-    container = client.containers.run(
+    return client.containers.run(
         "amazon/dynamodb-local",
         command="-jar DynamoDBLocal.jar",
         ports={"8000/tcp": 8000},
@@ -42,15 +49,17 @@ def dynamodb_container():
         detach=True,
         remove=True  # auto-remove when stopped
     )
-    time.sleep(2)
-
-    yield container
-    container.stop()
 
 
 @pytest.fixture
-def dynamodb_connection(dynamodb_container):
-    yield boto3.resource(
+def dynamodb_connection():
+
+    # Create the DynamoDB container
+    container = create_dynamodb_container()
+    time.sleep(2)
+
+    # Make a connection to the DB
+    dynamodb_connection = boto3.resource(
         'dynamodb',
         endpoint_url="http://localhost:8000",
         region_name='eu-west-1',
@@ -58,10 +67,14 @@ def dynamodb_connection(dynamodb_container):
         aws_secret_access_key="fakeSecretAccessKey"
     )
 
+    # create the 'Movies' table
+    create_movie_table(dynamodb=dynamodb_connection)
 
-@pytest.fixture
-def movie_table(dynamodb_connection):
-    yield create_movie_table(dynamodb=dynamodb_connection)
+    # return the connection
+    yield dynamodb_connection
+
+    # after a test completes, stop the container
+    container.stop()
 
 
 def _count_table_items(dynamodb_connection, table_name):
@@ -74,7 +87,7 @@ def _count_table_items(dynamodb_connection, table_name):
 ############### Tests ##################
 
 
-def test_insert_and_get_movie(movie_table, dynamodb_connection):
+def test_insert_and_get_movie(dynamodb_connection):
 
     insert_movie(
         MOVIE_TITLE, MOVIE_YEAR, MOVIE_PLOT, 0,
@@ -97,7 +110,7 @@ def test_insert_and_get_movie(movie_table, dynamodb_connection):
     assert movie['year'] == MOVIE_YEAR
 
 
-def test_delete_movie(movie_table, dynamodb_connection):
+def test_delete_movie(dynamodb_connection):
 
     insert_movie(
         MOVIE_TITLE, MOVIE_YEAR, MOVIE_PLOT, 0,

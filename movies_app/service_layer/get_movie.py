@@ -16,10 +16,3 @@ def get_movie(title, year, dynamodb=None):
         return None
     else:
         return response['Item']
-
-
-# if __name__ == '__main__':
-#     movie = get_movie("The Big New Movie", 2015,)
-#     if movie:
-#         print("Get movie succeeded:")
-#         pprint(movie, sort_dicts=False)
