@@ -19,14 +19,17 @@ MOVIE_YEAR = 2015
 MOVIE_PLOT = "This is a plot."
 
 
-@pytest.fixture   # or: @pytest.fixture(scope="session")
+@pytest.fixture
 def dynamodb_container():
-    # Python equivalent to launching a docker container i.e. equivalent to:
-    #  $ docker run -d --rm -p 8000:8000 --name=dynamodb amazon/dynamodb-local -jar DynamoDBLocal.jar
+    """
+    Python equivalent to launching a docker container i.e. equivalent to:
+      $ docker run -d --rm -p 8000:8000 --name=dynamodb amazon/dynamodb-local -jar DynamoDBLocal.jar
+    """
 
     # python client for interacting with docker:
     client = docker.from_env()
 
+    # generate a unique container name
     dt_now = datetime.datetime.now(datetime.UTC)
     container_name = f"dynamodb-test-{dt_now.strftime('%Y%m%d%H%M%S')}"
 

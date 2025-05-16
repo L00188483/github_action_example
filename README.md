@@ -38,13 +38,17 @@ $ pytest
 * Click "Run Workflow" on the right
 
 
+
 #### Optional: you launch the DaynamoDB container manually
 ```bash
-$ docker run -p -d --rm 8000:8000 --name=dynamodb amazon/dynamodb-local -jar DynamoDBLocal.jar
+$ docker run -d --rm -p 8000:8000 --name=dynamodb amazon/dynamodb-local -jar DynamoDBLocal.jar
 ```
 
-
-#### Run the flask webserver
+#### Optional: launch the Flask webapp
 ```bash
-$ python movies_app/app.py
+# note: ensure you have dynamodb running first
+$ cd movies_app/
+$ python app.py
 ```
+* go to: http://localhost:5000/movies
+* go to: http://localhost:5000/movies/2015/The_Big_New_Movie

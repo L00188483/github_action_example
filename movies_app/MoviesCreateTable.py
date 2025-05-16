@@ -1,9 +1,29 @@
 import boto3
 
+
 def create_movie_table(dynamodb=None):
+    """
+    Create 'Movies' table if it does not exist.
+    """
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")
 
+    try:
+        # Check if table exists by trying to describe it
+        table = dynamodb.Table('Movies')
+        table.load()  # This will raise ResourceNotFoundException if table doesn't exist
+        print("Table 'Movies' already exists.")
+        return table
+    except ClientError as e:
+        error_code = e.response['Error']['Code']
+        if error_code == 'ResourceNotFoundException':
+            return _create_movie_table(dynamodb=dynamodb)
+        else:
+            raise e
+
+
+def _create_movie_table(dynamodb):
+    """ Create 'Movies' table. """
     table = dynamodb.create_table(
         TableName='Movies',
         KeySchema=[

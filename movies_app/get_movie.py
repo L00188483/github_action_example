@@ -13,12 +13,13 @@ def get_movie(title, year, dynamodb=None):
         response = table.get_item(Key={'year': year, 'title': title})
     except ClientError as e:
         print(e.response['Error']['Message'])
+        return None
     else:
         return response['Item']
 
 
-if __name__ == '__main__':
-    movie = get_movie("The Big New Movie", 2015,)
-    if movie:
-        print("Get movie succeeded:")
-        pprint(movie, sort_dicts=False)
+# if __name__ == '__main__':
+#     movie = get_movie("The Big New Movie", 2015,)
+#     if movie:
+#         print("Get movie succeeded:")
+#         pprint(movie, sort_dicts=False)
