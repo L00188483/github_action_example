@@ -1,5 +1,3 @@
-import datetime
-
 import time
 
 import boto3
@@ -51,6 +49,12 @@ def create_dynamodb_container():
     )
 
 
+def _count_table_items(dynamodb_connection, table_name):
+    table = dynamodb_connection.Table(table_name)
+    response = table.scan()
+    return len(response['Items'])
+
+
 @pytest.fixture
 def dynamodb_connection():
 
@@ -77,16 +81,10 @@ def dynamodb_connection():
     container.stop()
 
 
-def _count_table_items(dynamodb_connection, table_name):
-    table = dynamodb_connection.Table(table_name)
-    response = table.scan()
-    return len(response['Items'])
-
-
-
 ############### Tests ##################
 
 
+# this test depends on the 'dynamodb_connection' fixture
 def test_insert_and_get_movie(dynamodb_connection):
 
     insert_movie(
